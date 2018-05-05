@@ -19,10 +19,11 @@ public class Sender implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Ball ball = new Ball(args[1]);
-        String message = ball.toJSON();
+        String name = Application.name();
         String routingKey = Application.routingKey();
-        System.out.println("TRACER Sending message to " + routingKey);
+        Ball ball = new Ball(name);
+        String message = ball.toJSON();
+        System.out.println("TRACER Sending seed message to " + routingKey);
         rabbitTemplate.convertAndSend(Application.topicExchangeName, routingKey, message);
     }
 }

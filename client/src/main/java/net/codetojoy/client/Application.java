@@ -17,10 +17,10 @@ public class Application {
     static final String queueName = Constants.QUEUE_NAME;
 
     private static String routingKey;
+    private static String name;
 
-    static String routingKey() {
-        return routingKey;
-    }
+    static String routingKey() { return routingKey; }
+    static String name() { return name; }
 
     @Bean
     Queue queue() {
@@ -38,24 +38,27 @@ public class Application {
         return BindingBuilder.bind(queue).to(exchange).with(routingKey);
     }
 
-    public static void processArgs(String... args) {
-        boolean isOk = false;
+    private static final String INPUT_PING = "i";
+    private static final String INPUT_PONG = "o";
 
-        if (args != null && args.length >= 1) {
-            String arg = args[0];
-            boolean isPing = Constants.PING.equalsIgnoreCase(arg);
-            boolean isPong = Constants.PONG.equalsIgnoreCase(arg);
-            isOk = (isPing || isPong);
-            routingKey = isPing ? Constants.PING_ROUTING_KEY : Constants.PONG_ROUTING_KEY;
-        }
+    private static void processCommand() {
+        Prompt prompt = new Prompt();
+        String input = prompt.getInput("\n\ncmd: [I=ping, O=pong, Q=quit] ?", INPUT_PING, INPUT_PONG);
 
-        if (! isOk) {
-            throw new IllegalArgumentException("check usage!");
-        }
+        if (input.equalsIgnoreCase(INPUT_PING)) {
+            name = prompt.getInput("enter a name: "); 
+            routingKey = Constants.PING_ROUTING_KEY;
+        } else if (input.equalsIgnoreCase(INPUT_PONG)) {
+            name = prompt.getInput("enter a name: "); 
+            routingKey = Constants.PONG_ROUTING_KEY;
+        } 
     }
 
     public static void main(String[] args) throws InterruptedException {
-        processArgs(args);
+        processCommand();
         SpringApplication.run(Application.class, args).close();
     }
 }
+
+
+
