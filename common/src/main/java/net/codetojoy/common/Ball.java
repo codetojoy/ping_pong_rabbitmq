@@ -2,6 +2,7 @@ package net.codetojoy.common;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.google.gson.Gson;
 
@@ -27,14 +28,25 @@ public class Ball {
         return json;
     }
 
-    public Ball hit(String msg) {
+    public Optional<Ball> hit(String msg) {
+        Optional<Ball> result = Optional.empty();
+
+        if (! isMaxedOut()) {
+            Ball newBall = simpleHit(msg);
+            result = Optional.of(newBall);
+        }
+
+        return result;
+    }
+
+    protected Ball simpleHit(String msg) {
         Ball newBall = new Ball(this.id);
         newBall.payload.addAll(this.payload);
         newBall.payload.add(msg);
         return newBall;
     }
 
-    public boolean isMaxedOut() {
+    protected boolean isMaxedOut() {
         boolean result = (getNumHits() >= MAX_HITS);
         return result;
     }
@@ -59,7 +71,7 @@ public class Ball {
     protected String getId() {
         return id;
     }
-    
+
     protected List<String> getPayload() {
         return payload;
     }

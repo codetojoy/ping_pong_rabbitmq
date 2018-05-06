@@ -2,6 +2,8 @@ package net.codetojoy.pong;
 
 import net.codetojoy.common.Ball;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,13 +19,11 @@ public class PongReceiver {
     public void pong(String json) {
         Ball ball = Ball.fromJSON(json);
         System.out.println("TRACER received: \n" + ball.toString());
+        String newMessage = "     #: " + (ball.getNumHits() + 1) + " PONG";
+        Optional<Ball> newBall = ball.hit(newMessage);
 
-        if (! ball.isMaxedOut()) {
-            String newMessage = "     #: " + (ball.getNumHits() + 1) + " PONG";
-            System.out.println("TRACER " + newMessage);
-
-            Ball newBall = ball.hit(newMessage);
-            pingSender.ping(newBall);
+        if (newBall.isPresent()) {
+            pingSender.ping(newBall.get());
         } else {
             System.out.println("TRACER halting sequence. numHits: " + ball.getNumHits());
             System.out.println("TRACER ball: " + ball.toString());
