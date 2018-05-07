@@ -25,20 +25,24 @@ public class Prompt {
         return input;
     }
 
-    private boolean matchInput(String input, String[] options) {
-        boolean isMatch = false;
+    protected Optional<String> find(String target, String[] options) {
+        Optional<String> result = Arrays.stream(options)
+                                        .filter( x -> x.equalsIgnoreCase(target) )
+                                        .findFirst();
 
-        for (String option : options) {
-            if (input.equalsIgnoreCase(option)) {
-                isMatch = true;
-                break;
-            } else if (input.equalsIgnoreCase(QUIT)) {
+        return result;
+    }
+
+    private boolean matchInput(String input, String[] options) {
+        Optional<String> result = find(input, options);
+        boolean isMatch = result.isPresent();
+
+        if (isMatch) {
+            if (QUIT.equalsIgnoreCase(result.get())) {
                 System.out.println("quitting ...");
                 System.exit(0);
             }
-        }
-
-        if (!isMatch) {
+        } else {
             System.out.println("try again: ");
         }
 

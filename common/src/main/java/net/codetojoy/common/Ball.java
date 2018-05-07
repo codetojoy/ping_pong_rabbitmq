@@ -39,6 +39,23 @@ public class Ball {
         return result;
     }
 
+
+    public String toString() {
+        StringBuilder buffer = new StringBuilder();
+        buffer.append("id: " + id + "\n");
+        buffer.append("payload: \n");
+
+        payload.stream().forEach( s -> buffer.append(s + "\n") ); 
+
+        return buffer.toString();
+    }
+
+    public int getNumHits() {
+        return payload.size();
+    }
+
+    // ------------ internal 
+
     protected Ball simpleHit(String msg) {
         Ball newBall = new Ball(this.id);
         newBall.payload.addAll(this.payload);
@@ -51,23 +68,8 @@ public class Ball {
         return result;
     }
 
-    public int getNumHits() {
-        return payload.size();
-    }
-
-    public String toString() {
-        StringBuilder buffer = new StringBuilder();
-        buffer.append("id: " + id + "\n");
-        buffer.append("payload: \n");
-
-        for (String s : payload) {
-            buffer.append(s + "\n");
-        }
-
-        return buffer.toString();
-    }
-
     // for testing
+
     protected String getId() {
         return id;
     }

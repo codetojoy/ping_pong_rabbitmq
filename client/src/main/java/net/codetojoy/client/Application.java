@@ -40,10 +40,11 @@ public class Application {
 
     private static final String INPUT_PING = "i";
     private static final String INPUT_PONG = "o";
+    private static final String INPUT_QUIT = "q";
 
     private static void processCommand() {
         Prompt prompt = new Prompt();
-        String input = prompt.getInput("\n\ncmd: [I=ping, O=pong, Q=quit] ?", INPUT_PING, INPUT_PONG);
+        String input = prompt.getInput("\n\ncmd: [I=ping, O=pong, Q=quit] ?", INPUT_PING, INPUT_PONG, INPUT_QUIT);
 
         if (input.equalsIgnoreCase(INPUT_PING)) {
             name = prompt.getInput("enter a name: "); 
